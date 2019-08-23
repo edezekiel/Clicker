@@ -20,6 +20,7 @@ function submit(event) {
   event.preventDefault();
   const name = document.querySelector(".loginInput");
   localStorage.setItem("Name", name.value);
+  location.assign("game.html")
 }
 
 // this saves a new player in the firestore database
