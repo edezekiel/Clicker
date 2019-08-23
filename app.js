@@ -1,5 +1,5 @@
 const db = firebase.firestore();
-const player = null;
+let player = null;
 
 function getPlayers() {
   db.collection("players")
@@ -14,6 +14,7 @@ function getPlayers() {
 const form = document.querySelector(".signInForm");
 form.onsubmit = submit;
 
+// saves the player's name in localstorage, and updates the "player" variable for later use.
 function submit(event) {
   event.preventDefault();
   const name = document.querySelector(".loginInput");
@@ -21,6 +22,7 @@ function submit(event) {
   player = name.value;
 }
 
+// this saves a new player in the firestore database
 function addPlayer(player) {
   db.collection("players").add({ player: name.value });
   console.log(localStorage.getItem("Name"));
