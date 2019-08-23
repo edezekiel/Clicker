@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Clicker</title>
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.js"
+            integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+            crossorigin="anonymous"></script>
     <style>
         html {
             height: 100%;
@@ -18,7 +22,7 @@
             width: 25%;
             border: 1px solid red;
         }
-        .game-area {
+        #game-area {
             width: 75%;
             height: 100%;
             position: relative;
@@ -34,7 +38,7 @@
 
 <div class="score-panel"></div>
 
-<div class="game-area">
+<div id="game-area">
     <img alt="Click Me!" src="./assets/click-target-level1.png" id="click-target">
 </div>
 
@@ -57,27 +61,51 @@
     function randBetween(value){
         let num = Math.floor(Math.random()*value) + 1;
         num *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
+        return num;
     }
 
     function getNextDirectionChange() {
         return {
-            dx: randBetween(100),
-            dy: randBetween(100),
-            dt: randBetween(10)
+            dx: randBetween(300),  // pixels to travel in x direction
+            dy: randBetween(300),  // pixels to travel in y direction
+            dt: randBetween(3),   // time to travel
+             t: randBetween(3)    // time until next direction change
         }
     }
 
-    window.onload = function(){
+
+
+    $(document).ready(function(){
+
+        function move(target, params){
+            console.log(target);
+            console.log(params);
+            $(target).animate({
+                left: `+=${params.dx}`,
+                top:  `+=${params.dy}`,
+            }, params.dt * 1000, function(){
+                move(target, getNextDirectionChange());
+            });
+        }
+
+        let gameArea = document.getElementById("game-area");
         let clickTarget = document.getElementById("click-target");
-        clickTarget.style.display = "inline-block";
+        clickTarget.style.display = "block";
+        clickTarget.style.top = Math.floor( gameArea.clientHeight / 2 - clickTarget.clientHeight/2)+ "px";
+        clickTarget.style.left = Math.floor( gameArea.clientWidth / 2 - clickTarget.clientWidth/2) + "px";
+        console.log(clickTarget);
+
+
 
         clickTarget.addEventListener('click', function(event){
             handleClick();
         });
+        move(clickTarget, getNextDirectionChange());
 
         // while (gameInProgress) {
         //
         // }
-    }
+    })
+
 </script>
 </html>
