@@ -1,5 +1,9 @@
 const db = firebase.firestore();
-let player = null;
+
+// get the sign in form and attach the submit function to it.
+
+const form = document.querySelector(".signInForm");
+form.onsubmit = submit;
 
 function getPlayers() {
   db.collection("players")
@@ -11,19 +15,16 @@ function getPlayers() {
     );
 }
 
-const form = document.querySelector(".signInForm");
-form.onsubmit = submit;
-
 // saves the player's name in localstorage, and updates the "player" variable for later use.
 function submit(event) {
   event.preventDefault();
   const name = document.querySelector(".loginInput");
   localStorage.setItem("Name", name.value);
-  player = name.value;
 }
 
 // this saves a new player in the firestore database
-function addPlayer(player) {
-  db.collection("players").add({ player: name.value });
+function addPlayer() {
+  const playerName = localStorage.getItem("Name");
+  db.collection("players").add({ player: playerName });
   console.log(localStorage.getItem("Name"));
 }
