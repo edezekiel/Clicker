@@ -1,32 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
+<head>
+    <meta charset="UTF-8">
     <title>Clicker</title>
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.js"
+            integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+            crossorigin="anonymous"></script>
     <style>
-      html {
-        height: 100%;
-        width: 100%;
-      }
-      body {
-        height: 100%;
-        width: 100%;
-        background-color: white;
-        display: flex;
-      }
-      .score-panel {
-        width: 25%;
-        border: 1px solid red;
-      }
-      .game-area {
-        width: 75%;
-        height: 100%;
-        position: relative;
-      }
-      #click-target {
-        display: none;
-        position: absolute;
-      }
+        html {
+            height: 100%;
+            width: 100%;
+        }
+        body {
+            height: 100%;
+            width: 100%;
+            background-color: white;
+            display: flex;
+        }
+        .score-panel {
+            width: 25%;
+            border: 1px solid red;
+        }
+        #game-area {
+            width: 75%;
+            height: 100%;
+            position: relative;
+        }
+        #click-target {
+            display: none;
+            position: absolute;
+
+        }
     </style>
   </head>
   <body>
@@ -40,15 +45,14 @@
         <div>Current Score: <span>0</span></div>
     </div>
 
-    <div class="game-area">
-      <img
-        alt="Click Me!"
-        src="./assets/click-target-level1.png"
-        id="click-target"
-      />
-    </div>
-  </body>
-  <script>
+<div id="game-area">
+    <img alt="Click Me!" src="./assets/click-target-level1.png" id="click-target">
+</div>
+
+
+
+</body>
+<script>
     let gameInProgress = true;
 
     function handleClick() {}
@@ -86,52 +90,87 @@
 
     // returns a random number between value and value * -1
     // so if value = 3 then returns a number between (3, -3)
-    function randBetween(value) {
-      let num = Math.floor(Math.random() * value) + 1;
-      num *= Math.floor(Math.random() * 2) == 1 ? 1 : -1;
+    function randBetween(value){
+        let num = Math.floor(Math.random()*value) + 1;
+        num *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
+        return num;
     }
 
     function getNextDirectionChange() {
-      return {
-        dx: randBetween(100),
-        dy: randBetween(100),
-        dt: randBetween(10)
-      };
+        return {
+            dx: randBetween(300),  // pixels to travel in x direction
+            dy: randBetween(300),  // pixels to travel in y direction
+            dt: randBetween(3),   // time to travel
+             t: randBetween(3)    // time until next direction change
+        }
     }
 
-    window.onload = function() {
-      const userName = document.querySelector(".userName");
 
-      userName.textContent = `${getPlayerName()}`;
 
-      let clickTarget = document.getElementById("click-target");
-      clickTarget.style.display = "inline-block";
+    $(document).ready(function(){
+		const userName = document.querySelector(".userName");
 
-      clickTarget.addEventListener("click", function(event) {
-        handleClick();
-      });
+		userName.textContent = `${getPlayerName()}`;
 
-      // while (gameInProgress) {
-      //
-      // }
-    };
-  </script>
+        let gameArea = document.getElementById("game-area");
+        let clickTarget = document.getElementById("click-target");
 
-  <!-- Add Firebase products that you want to use -->
-  <script src="https://www.gstatic.com/firebasejs/6.4.1/firebase-firestore.js"></script>
+        function move(target, params){
+            console.log(target);
+            console.log(params);
 
-  <script>
-    // TODO: Replace the following with your app's Firebase project configuration
-    var firebaseConfig = {
-      apiKey: "AIzaSyAw3JONHwyZ9jn2zX9T6ZOZeimGsfGmF90",
-      authDomain: "clickergame-e401c.firebaseapp.com",
-      databaseURL: "https://clickergame-e401c.firebaseio.com",
-      projectId: "clickergame",
-      storageBucket: "clickergame.appspot.com",
-      messagingSenderId: "211768838765",
-      appId: "1:211768838765:web:a31ef941b3f1079f"
-    };
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-  </script>
+            // keep it from flying off the screen top/bottom
+            if(clickTarget.style.top + params.dy > gameArea.clientHeight){
+                params.dy = clickTarget.style.top * -1;
+            } else if( clickTarget.style.top + params.dy  < 0){
+                params.dy = clickTarget.style.top * -1;
+            }
+
+            // keep it from flying off the screen left/right
+            if(clickTarget.style.left + params.dx > gameArea.clientWidth){
+                params.dx = clickTarget.style.left * -1;
+            } else if(clickTarget.style.left + params.dx < 0){
+                params.dx = clickTarget.style.left * -1;
+            }
+
+            $(target).animate({
+                left: `+=${params.dx}`,
+                top:  `+=${params.dy}`,
+            }, params.dt * 1000, function(){
+                move(target, getNextDirectionChange());
+            });
+        }
+
+
+        clickTarget.style.display = "block";
+        clickTarget.style.top = Math.floor( gameArea.clientHeight / 2 - clickTarget.clientHeight/2)+ "px";
+        clickTarget.style.left = Math.floor( gameArea.clientWidth / 2 - clickTarget.clientWidth/2) + "px";
+        console.log(clickTarget);
+
+
+
+        clickTarget.addEventListener('click', function(event){
+            handleClick();
+        });
+		move(clickTarget, getNextDirectionChange());
+    });
+</script>
+
+<!-- Add Firebase products that you want to use -->
+<script src="https://www.gstatic.com/firebasejs/6.4.1/firebase-firestore.js"></script>
+
+<script>
+	// TODO: Replace the following with your app's Firebase project configuration
+	var firebaseConfig = {
+		apiKey: "AIzaSyAw3JONHwyZ9jn2zX9T6ZOZeimGsfGmF90",
+		authDomain: "clickergame-e401c.firebaseapp.com",
+		databaseURL: "https://clickergame-e401c.firebaseio.com",
+		projectId: "clickergame",
+		storageBucket: "clickergame.appspot.com",
+		messagingSenderId: "211768838765",
+		appId: "1:211768838765:web:a31ef941b3f1079f"
+	};
+	// Initialize Firebase
+	firebase.initializeApp(firebaseConfig);
+</script>
 </html>
