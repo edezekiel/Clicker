@@ -1,16 +1,15 @@
-// import firebase from 'firebase'
-
 const db = firebase.firestore();
-db.collection("players")
-  .get()
-  .then(resp =>
-    console.log(
-      resp.docs[0]._document.data.internalValue.root.value.internalValue
-    )
-  );
+const player = null;
 
-// get()
-// .then(resp => console.log(resp))
+function getPlayers() {
+  db.collection("players")
+    .get()
+    .then(resp =>
+      console.log(
+        resp.docs[0]._document.data.internalValue.root.value.internalValue
+      )
+    );
+}
 
 const form = document.querySelector(".signInForm");
 form.onsubmit = submit;
@@ -19,5 +18,10 @@ function submit(event) {
   event.preventDefault();
   const name = document.querySelector(".loginInput");
   localStorage.setItem("Name", name.value);
-  console.log(localStorage.getItem("Name"))
+  player = name.value;
+}
+
+function addPlayer(player) {
+  db.collection("players").add({ player: name.value });
+  console.log(localStorage.getItem("Name"));
 }
