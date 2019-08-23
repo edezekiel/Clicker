@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Clicker</title>
+    <style>
+        html {
+            height: 100%;
+            width: 100%;
+        }
+        body {
+            height: 100%;
+            width: 100%;
+            background-color: white;
+            display: flex;
+        }
+        .score-panel {
+            width: 25%;
+            border: 1px solid red;
+        }
+        .game-area {
+            width: 75%;
+            height: 100%;
+            position: relative;
+        }
+        #click-target {
+            display: none;
+            position: absolute;
+
+        }
+    </style>
+</head>
+<body>
+
+<div class="score-panel"></div>
+
+<div class="game-area">
+    <img alt="Click Me!" src="./assets/click-target-level1.png" id="click-target">
+</div>
+
+
+
+</body>
+<script>
+    let gameInProgress = true;
+
+    function handleClick() {
+
+    }
+
+    function moveTarget(x, y) {
+
+    }
+
+    // returns a random number between value and value * -1
+    // so if value = 3 then returns a number between (3, -3)
+    function randBetween(value){
+        let num = Math.floor(Math.random()*value) + 1;
+        num *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
+    }
+
+    function getNextDirectionChange() {
+        return {
+            dx: randBetween(100),
+            dy: randBetween(100),
+            dt: randBetween(10)
+        }
+    }
+
+    window.onload = function(){
+        let clickTarget = document.getElementById("click-target");
+        clickTarget.style.display = "inline-block";
+
+        clickTarget.addEventListener('click', function(event){
+            handleClick();
+        });
+
+        // while (gameInProgress) {
+        //
+        // }
+    }
+</script>
+</html>
