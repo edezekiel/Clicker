@@ -42,7 +42,7 @@
 
     <div class="score-panel">
         <div class="userName">Welcome: </div>
-        <div>Current Score: <span>0</span></div>
+        <div class="userScore">Current Score: 0</div>
     </div>
 
 <div id="game-area">
@@ -109,8 +109,10 @@
 
     $(document).ready(function(){
 		const userName = document.querySelector(".userName");
+        const userScore = document.querySelector(".userScore");
 
 		userName.textContent = `${getPlayerName()}`;
+		userScore.textContent = `Current Score: ${getPlayerScore()}`;
 
         let gameArea = document.getElementById("game-area");
         let clickTarget = document.getElementById("click-target");
