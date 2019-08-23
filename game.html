@@ -33,17 +33,10 @@
 
         }
     </style>
-  </head>
-  <body>
-    <!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
+</head>
+<body>
 
-    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
-    <script src="https://www.gstatic.com/firebasejs/6.4.1/firebase-app.js"></script>
-
-    <div class="score-panel">
-        <div class="userName">Welcome: </div>
-        <div>Current Score: <span>0</span></div>
-    </div>
+<div class="score-panel"></div>
 
 <div id="game-area">
     <img alt="Click Me!" src="./assets/click-target-level1.png" id="click-target">
@@ -55,37 +48,8 @@
 <script>
     let gameInProgress = true;
 
-    function handleClick() {}
+    function handleClick() {
 
-    function moveTarget(x, y) {}
-
-    // gets all players from FireStore
-    function getPlayers() {
-      db.collection("players")
-        .get()
-        .then(resp => console.log(resp));
-    }
-
-    // gets current player name from LocalStorage
-    function getPlayerName() {
-      if (localStorage.getItem("Name") !== undefined) {
-        return localStorage.getItem("Name");
-      }
-    }
-
-    function getPlayerScore() {
-      if (localStorage.getItem("Score") !== undefined) {
-        return localStorage.getItem("Score");
-      }
-    }
-
-    // Saves player and score in FireStore
-    function saveScore() {
-      db.collection("players").add({
-        name: getPlayerName(),
-        score: getPlayerScore()
-      });
-      getPlayers();
     }
 
     // returns a random number between value and value * -1
@@ -108,9 +72,6 @@
 
 
     $(document).ready(function(){
-		const userName = document.querySelector(".userName");
-
-		userName.textContent = `${getPlayerName()}`;
 
         let gameArea = document.getElementById("game-area");
         let clickTarget = document.getElementById("click-target");
@@ -152,25 +113,9 @@
         clickTarget.addEventListener('click', function(event){
             handleClick();
         });
-		move(clickTarget, getNextDirectionChange());
-    });
-</script>
+        move(clickTarget, getNextDirectionChange());
 
-<!-- Add Firebase products that you want to use -->
-<script src="https://www.gstatic.com/firebasejs/6.4.1/firebase-firestore.js"></script>
+    })
 
-<script>
-	// TODO: Replace the following with your app's Firebase project configuration
-	var firebaseConfig = {
-		apiKey: "AIzaSyAw3JONHwyZ9jn2zX9T6ZOZeimGsfGmF90",
-		authDomain: "clickergame-e401c.firebaseapp.com",
-		databaseURL: "https://clickergame-e401c.firebaseio.com",
-		projectId: "clickergame",
-		storageBucket: "clickergame.appspot.com",
-		messagingSenderId: "211768838765",
-		appId: "1:211768838765:web:a31ef941b3f1079f"
-	};
-	// Initialize Firebase
-	firebase.initializeApp(firebaseConfig);
 </script>
 </html>
