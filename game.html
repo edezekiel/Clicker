@@ -1,83 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Clicker</title>
     <style>
-        html {
-            height: 100%;
-            width: 100%;
-        }
-        body {
-            height: 100%;
-            width: 100%;
-            background-color: white;
-            display: flex;
-        }
-        .score-panel {
-            width: 25%;
-            border: 1px solid red;
-        }
-        .game-area {
-            width: 75%;
-            height: 100%;
-            position: relative;
-        }
-        #click-target {
-            display: none;
-            position: absolute;
-
-        }
+      html {
+        height: 100%;
+        width: 100%;
+      }
+      body {
+        height: 100%;
+        width: 100%;
+        background-color: white;
+        display: flex;
+      }
+      .score-panel {
+        width: 25%;
+        border: 1px solid red;
+      }
+      .game-area {
+        width: 75%;
+        height: 100%;
+        position: relative;
+      }
+      #click-target {
+        display: none;
+        position: absolute;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
+    <!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
 
-<div class="score-panel"></div>
+    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/6.4.1/firebase-app.js"></script>
 
-<div class="game-area">
-    <img alt="Click Me!" src="./assets/click-target-level1.png" id="click-target">
-</div>
+    <div class="score-panel">
+        <div class="userName">Welcome: </div>
+        <div>Current Score: <span>0</span></div>
+    </div>
 
-
-
-</body>
-<script>
+    <div class="game-area">
+      <img
+        alt="Click Me!"
+        src="./assets/click-target-level1.png"
+        id="click-target"
+      />
+    </div>
+  </body>
+  <script>
     let gameInProgress = true;
 
-    function handleClick() {
+    function handleClick() {}
 
+    function moveTarget(x, y) {}
+
+    // gets all players from FireStore
+    function getPlayers() {
+      db.collection("players")
+        .get()
+        .then(resp => console.log(resp));
     }
 
-    function moveTarget(x, y) {
+    // gets current player name from LocalStorage
+    function getPlayerName() {
+      if (localStorage.getItem("Name") !== undefined) {
+        return localStorage.getItem("Name");
+      }
+    }
 
+    function getPlayerScore() {
+      if (localStorage.getItem("Score") !== undefined) {
+        return localStorage.getItem("Score");
+      }
+    }
+
+    // Saves player and score in FireStore
+    function saveScore() {
+      db.collection("players").add({
+        name: getPlayerName(),
+        score: getPlayerScore()
+      });
+      getPlayers();
     }
 
     // returns a random number between value and value * -1
     // so if value = 3 then returns a number between (3, -3)
-    function randBetween(value){
-        let num = Math.floor(Math.random()*value) + 1;
-        num *= Math.floor(Math.random()*2) == 1 ? 1 : -1;
+    function randBetween(value) {
+      let num = Math.floor(Math.random() * value) + 1;
+      num *= Math.floor(Math.random() * 2) == 1 ? 1 : -1;
     }
 
     function getNextDirectionChange() {
-        return {
-            dx: randBetween(100),
-            dy: randBetween(100),
-            dt: randBetween(10)
-        }
+      return {
+        dx: randBetween(100),
+        dy: randBetween(100),
+        dt: randBetween(10)
+      };
     }
 
-    window.onload = function(){
-        let clickTarget = document.getElementById("click-target");
-        clickTarget.style.display = "inline-block";
+    window.onload = function() {
+      const userName = document.querySelector(".userName");
 
-        clickTarget.addEventListener('click', function(event){
-            handleClick();
-        });
+      userName.textContent = `${getPlayerName()}`;
 
-        // while (gameInProgress) {
-        //
-        // }
-    }
-</script>
+      let clickTarget = document.getElementById("click-target");
+      clickTarget.style.display = "inline-block";
+
+      clickTarget.addEventListener("click", function(event) {
+        handleClick();
+      });
+
+      // while (gameInProgress) {
+      //
+      // }
+    };
+  </script>
+
+  <!-- Add Firebase products that you want to use -->
+  <script src="https://www.gstatic.com/firebasejs/6.4.1/firebase-firestore.js"></script>
+
+  <script>
+    // TODO: Replace the following with your app's Firebase project configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyAw3JONHwyZ9jn2zX9T6ZOZeimGsfGmF90",
+      authDomain: "clickergame-e401c.firebaseapp.com",
+      databaseURL: "https://clickergame-e401c.firebaseio.com",
+      projectId: "clickergame",
+      storageBucket: "clickergame.appspot.com",
+      messagingSenderId: "211768838765",
+      appId: "1:211768838765:web:a31ef941b3f1079f"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
 </html>
